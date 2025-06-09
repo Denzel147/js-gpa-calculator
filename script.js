@@ -2,7 +2,7 @@ const form = document.getElementById('assignment-form');
 const assignmentName = document.getElementById('assignment-name');
 const assignmentGrade = document.getElementById('assignment-grade');
 const assignmentList = document.getElementById('assignment-list');
-const gpaDisplay = document.getElementById('gpa');
+const gpaDisplay = document.getElementById('gpa-display');
 
 let assignments = [];
 
@@ -40,9 +40,28 @@ form.addEventListener('submit', function (e) {
 // Render Assignments
 function renderAssignments() {
   assignmentList.innerHTML = '';
-  assignments.forEach((a, i) => {
+  assignments.forEach((a) => {
     const li = document.createElement('li');
-    li.textContent = `${a.name}: ${a.grade}/5`;
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'assignment-name';
+    nameSpan.textContent = a.name;
+
+    const gradeSpan = document.createElement('span');
+    gradeSpan.className = 'assignment-grade';
+    gradeSpan.textContent = `${a.grade}/5`;
+
+    // Assign color class based on grade value
+    if (a.grade >= 4) {
+      gradeSpan.classList.add('grade-high');
+    } else if (a.grade >= 2.5) {
+      gradeSpan.classList.add('grade-mid');
+    } else {
+      gradeSpan.classList.add('grade-low');
+    }
+
+    li.appendChild(nameSpan);
+    li.appendChild(gradeSpan);
     assignmentList.appendChild(li);
   });
 }
@@ -73,6 +92,9 @@ window.addEventListener('load', () => {
 // Save on update
 function saveToStorage() {
   localStorage.setItem('assignments', JSON.stringify(assignments));
+  assignmentName.value = '';
+  assignmentGrade.value = '';
+  alert('Assignments saved successfully!');
 }
 
 // Call saveToStorage on submit
